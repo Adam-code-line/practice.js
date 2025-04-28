@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            height: 300px;
+            width: 300px;
+            background-color: pink;
+            border-radius: 10px;
+            text-align: center;
+            margin:  150px auto;
+        }
+
+        h1, h2, h3 {
+            display: inline-block;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="box"> 
+        <h1 class="rank">一等奖:</h1>
+        <h1 class="who1"></h1>
+        <br>
+        <h2 class="rank">二等奖:</h2>
+        <h2 class="who2"></h2>
+        <br>
+        <h3 class="rank">三等奖:</h3>
+        <h3 class="who3"></h3>
+    </div>
+    <script>
+        const arr = ['刘德华','周星驰','周杰伦','pink','李白']
+
+        function getRandom(N,M) {
+            return Math.floor(Math.random()*(M-N+1))+N
+        }
+
+        for(let i =1;i<=3;i++) {
+            let random = getRandom(0,arr.length-1)
+            let select =  document.querySelector(`.box .who${i}`)
+            select.innerHTML = arr[random]
+            arr.splice(random,1)
+        }
+
+    </script>
+</body>
+</html>
