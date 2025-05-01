@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        .present {
+            height: 50px;
+            margin: 19px auto;
+            font-size: 35px;
+            /* background-color: black; */
+        }
+
+        .btn {
+            margin:30px auto;
+            height: 300px;
+            width: 300px;
+            text-align: center;
+            /* background-color: aqua; */
+        }
+
+        .start,.end {
+            width: 100px;
+            height: 50px;
+        }
+
+        .start,.name,.present{
+            float: left;
+        }
+
+        .end {
+            float: right;
+        }
+
+        .title {
+            margin: auto;
+            height: 300px;
+            width: 600px;
+            background-color: pink;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="title">
+        <h1>随机点名</h1>
+        <h1 class="name">名字是：</h1>
+        <div class="present">这里显示姓名</div>
+    </div>
+
+    <div class="btn">
+        <button class="start">开始</button>
+        <button class="end">结束</button>
+    </div>
+
+    <script>
+        
+        let timerId = 0
+        let select = 0
+
+        function getRandom(N,M) {
+            return Math.floor(Math.random()*(M-N+1))+N
+        }
+
+        function goStart() {
+            const present = document.querySelector('.present')
+            select = getRandom(0,dataArr.length-1)
+            present.innerHTML = dataArr[select]
+        }
+
+        function goStart1() {
+
+            if(dataArr.length === 1) {
+                start.disabled = true
+                end.disabled = true
+            }
+
+            if(timerId) {
+                clearInterval(timerId)
+            }
+            
+          timerId = setInterval(goStart,100)
+
+        }
+
+        function goEnd() {
+            clearInterval(timerId)
+            dataArr.splice(select,1)       
+            timerId = 0
+        }
+
+        const start = document.querySelector('.btn .start')
+        const end = document.querySelector('.btn .end')
+        let dataArr = ['马超','关羽','张飞','刘备','曹操']
+        start.addEventListener('click',goStart1)
+        end.addEventListener('click',goEnd)
+        
+
+    </script>
+</body>
+</html> 

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>轮播图</title>
+    <style>
+        .but {
+            text-align: center
+            ;
+        }
+
+        .left,.right {
+            width: 35px;
+            height: 30px;
+        }
+
+        .box {
+            width: 500px;
+            margin: auto;
+            background-color: pink;
+            position: relative;
+        }
+
+        img {
+            display: block;
+            width: 500px;
+            height: 500px;
+            object-fit: cover;
+        }
+
+        .list {
+            margin: 0px auto;
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            background-color: pink;
+        }
+
+        .list li {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin: 0 5px;
+            background-color: gray;
+            border-radius: 50%;
+            cursor: pointer;
+            
+        }
+
+        .active {
+            background-color: aqua !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+    <img src="https://img.keaitupian.cn/newupload/05/1683621565610736.jpg" alt="">
+        <ul class="list">
+            <li class="active"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <div class="but">
+            <button class="left"> < </button>
+            <button class="right"> > </button>
+        </div>
+    </div>
+    <script>
+        let timerId = 0
+        let i = 0
+
+        function changeToLeft() {
+            i--
+            i<0?i=imgData.length-1:i
+            change()
+        }
+
+        function changeToRight() {
+            i++
+            i>=imgData.length?i=0:i
+            change()
+        }
+
+        function change() {
+            const img = document.querySelector('img')
+            img.src = imgData[i].url
+            document.querySelector('.list .active').classList.remove('active')
+            document.querySelector(`.list li:nth-child(${i+1})`).classList.add('active')
+        }
+
+        function start() {
+            timerId =setInterval(changeToRight,1000)
+        }
+
+        function stop() {
+            clearInterval(timerId)
+        }
+
+        let imgData = [
+            {url:'https://img.keaitupian.cn/newupload/05/1683621565610736.jpg'},
+            {url:'https://img.keaitupian.cn/newupload/05/1683968349678196.jpg'},
+            {url:'https://ts1.tc.mm.bing.net/th/id/R-C.b67e150bb8d0a22a005d9f88bbfcca23?rik=RPoO8zLB64qWyQ&riu=http%3a%2f%2fwww.adwest.cn%2fpublic%2fuploads%2fimage%2f20240227%2fs2024022710495043.jpg&ehk=wBVejidd3yABNcAyjQ4drZPN4ceJT7HrEZDNPJRSbGE%3d&risl=&pid=ImgRaw&r=0'},
+            {url:'https://cdn-prd.ggac.com/ggac/work/image/2024/7/31/4903b122-6a26-448b-a2a0-ed1147682cfd-2048x.jpg'},
+            {url:'https://file.moyublog.com/d/file/2024-10-10/6782bf891202d4855eb883094a157ed7.jpg'}
+        ]
+
+        const right = document.querySelector('.right')
+        right.addEventListener('click',changeToRight)
+
+        const left = document.querySelector('.left')
+        left.addEventListener('click',changeToLeft)
+
+        const pause = document.querySelector('.box')
+        pause.addEventListener('mouseenter',stop)
+
+        const begin = document.querySelector('.box')
+        begin.addEventListener('mouseleave',start)
+
+        start()
+
+    </script>
+</body>
+</html>
