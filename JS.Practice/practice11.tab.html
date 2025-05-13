@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .tab {
+            width: 700px;
+            border: 1px solid black;
+            overflow: hidden;
+            margin: 100px auto;
+        }
+
+        .item {
+            display: none;
+        }
+
+        .item.active {
+            display: block;
+            object-fit: cover;
+        }
+        .nav {
+            width: 700px;
+            height: 40px;
+            line-height: 40px;
+            border: 1px solid black;
+            overflow: hidden;
+        }
+
+        .nav li{
+            float: right;
+            list-style: none;
+            margin-right: 50px;
+            font-size: 20px;
+        }
+        
+        .nav li a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .nav li a.active {
+            color: red;
+            text-decoration: underline;
+        }
+        img {
+            width: 100%;
+            height: 700px;
+            object-fit: cover; 
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="tab">
+        <div class="nav">
+            <ul>
+                <li><a href="#" class="active">舞蹈</a></li>
+                <li><a href="#">音乐</a></li>
+                <li><a href="#">美术</a></li>
+            </ul>
+        </div>
+    <div class="item active">
+        <img src="https://ts1.tc.mm.bing.net/th/id/R-C.98b706085065e5d22d51190c8a276b6b?rik=%2bULshCEgtA06pg&riu=http%3a%2f%2fn.sinaimg.cn%2fsinakd20220203ac%2f600%2fw1080h1920%2f20220203%2f2b4f-8d81ff0ffebd2d3024cb1f3cbaa12dc5.jpg&ehk=SvIyQpH164nzt7xA3YvBqrZ59Hy45oVo3xXqq9C5RnI%3d&risl=&pid=ImgRaw&r=0" alt="">
+    </div>
+
+    <div class="item">
+        <img src="https://jsnews.jschina.com.cn/nj/a/202209/W020220909395324593767.jpg" alt="">
+    </div>
+
+    <div class="item">
+        <img src="https://n.sinaimg.cn/sinakd20120/408/w1728h1080/20200501/1bbe-isyparf9550940.jpg" alt="">
+    </div>
+
+</div>
+
+<script>
+    const as = document.querySelectorAll('.nav a')
+    const item = document.querySelectorAll('.item')
+    console.log(as);
+    for(let i = 0;i<as.length;i++) {
+        as[i].addEventListener('mouseenter',function() {
+            document.querySelector('.nav .active').classList.remove('active')
+            this.classList.add('active')
+            document.querySelector('.item.active').classList.remove('active')
+            document.querySelector(`.item:nth-child(${i+2})`).classList.add('active')   
+        })
+    }
+</script>
+</body>
+</html>
