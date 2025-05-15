@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            height: 3000px;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        .header {
+            position: fixed;
+            top: -80px;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background-color: purple;
+            text-align: center;
+            color: #fff;
+            line-height: 80px;
+            font-size: 30px;
+            transition: all .3s;
+        }
+
+        .nav > a:hover,.list>li:hover{
+            background-color: rgb(244, 106, 0);
+        }
+
+        .nav > a,.list>li{
+            cursor: pointer;
+            font-size: 15px;
+            width: 300px;
+            height: 50px;
+            display: block;
+            background-color: rgb(83,87,88);
+            text-decoration: none;
+            color: #fff;
+            text-indent: 2em;
+            line-height: 40px;
+            transition: background-color 0.3s;
+        }
+
+        .nav {
+            width: 300px;
+            margin: 100px auto;
+        }
+
+        .mi {
+            width: 300px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .list {
+            display: none;
+        }
+
+        .list li a {
+            color: aliceblue;
+        }
+
+        input {
+            width: 300px;
+            height: 30px;
+        }
+
+
+        .search:focus, .search1 {
+        border: 1px solid #ff6700;
+        outline: none; /* 移除默认的聚焦轮廓 */
+        }
+
+
+        .active {
+           color: rgb(149, 189, 180) !important;
+        }
+        .xtx-elevator {
+            position: fixed;
+            left: 50%;
+            top: 280px;
+            z-index: 999;
+            margin-left: 640px;
+            opacity: 0;
+            border: 1px solid black;
+            transition: all .5s;
+            text-align: center;
+        }
+
+        .xtx-elevator-list li a {
+            display: block;
+            width: 70px;
+            height: 90px;
+            line-height: 70px;
+            background: #fff;
+            text-decoration: none;
+            color: black;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">顶部导航栏</div>
+
+<div class="xtx-goods-product">
+    <div class="nav">
+    <a href="#">手机 电话卡</a>
+    <a href="#">电视 盒子</a>
+    <a href="#">笔记本 平板</a>
+    <a href="#">出行 穿戴</a>
+    <a href="#">智能 路由器</a>
+    <a href="#">健康 儿童</a>
+    <a href="#">耳机 音响</a>
+    </div>
+</div>
+
+<div class="xtx-goods-search">
+    <div class="mi">
+        <input type="search" placeholder="小米笔记本" class="search">
+        <ul class="list">
+            <li><a href="#">全部商品</a></li>
+            <li><a href="#">小米11</a></li>
+            <li><a href="#">小米10s</a></li>
+            <li><a href="#">小米笔记本</a></li>
+            <li><a href="#">小米手机</a></li>
+            <li><a href="#">黑鲨</a></li>
+            <li><a href="#">空调</a></li>
+        </ul>
+    </div>
+</div>
+
+    <div class="xtx-elevator">
+        <ul class="xtx-elevator-list">
+            <li><a href="javascript:void(0)" data-name="product">产品</a></li>
+            <li><a href="javascript:void(0)" data-name="search">搜索</a></li>
+            <li><a href="javascript:void(0)" id="backTop" ><i class="sprites"></i>顶部</a></li>
+        </ul>
+    </div>
+
+<script>
+    (function () {
+        const header = document.querySelector('.header')
+        const nav = document.querySelector('.nav')
+        const search = document.querySelector('.search')
+        const mi = document.querySelector('.mi')
+        const list = document.querySelector('.list')
+        const ele = document.querySelector('.xtx-elevator')
+        const backTop = document.querySelector('#backTop')
+
+        search.addEventListener('focus',function(){
+            list.style.display = 'block'
+            search.classList.add('search1')
+            list.classList.add('search1')
+
+        })
+    
+        search.addEventListener('blur',function(){
+            list.style.display = 'none'
+            search.classList.remove('search1')
+        })
+
+            window.addEventListener('scroll',function() {
+            const n = document.documentElement.scrollTop
+            if( n >= nav.offsetTop) {
+                ele.style.opacity = 1
+            }else {
+                ele.style.opacity = 0
+            }
+            if(n>=mi.offsetTop) {
+                header.style.top = 0
+            }else {
+                header.style.top = '-80px'
+            }
+        })
+
+            backTop.addEventListener('click',function() {
+                document.documentElement.scrollTop = 0
+        })
+    })();
+
+    ( function() {
+
+        const list = document.querySelector('.xtx-elevator-list')
+        list.addEventListener('click',function(e) {
+            if(e.target.tagName === 'A'&&e.target.dataset.name) {
+                const old = document.querySelector('.xtx-elevator-list .active')
+                if(old) {
+                    old.classList.remove('active')
+                }
+                e.target.classList.add('active')
+                console.log(e.target.dataset.name);
+                const top = document.querySelector(`.xtx-goods-${e.target.dataset.name}`)
+                document.documentElement.scrollTop=top.offsetTop
+
+                
+            }   
+        })
+
+        window.addEventListener('scroll',function() {
+            const old = document.querySelector('.xtx-elevator-list .active')
+            if(old) {
+                old.classList.remove('active')
+            }
+            const product = document.querySelector('.xtx-goods-product')
+            const search = document.querySelector('.xtx-goods-search')
+            const n = document.documentElement.scrollTop
+            if(n >= product.offsetTop && n <= search.offsetTop) {
+                document.querySelector('[data-name=product]').classList.add('active')
+
+            }else if(n >=search.offsetTop) {
+                document.querySelector('[data-name=search]').classList.add('active')
+
+            }
+        })
+
+    })();
+</script>
+</body>
+</html>
