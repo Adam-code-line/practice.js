@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>休息倒计时</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background-color 0.5s ease;
+        }
+
+        .countdown {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 90%;
+            max-width: 450px;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .countdown:hover {
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .today {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .timer h1 {
+            font-size: 1.5rem;
+            color: #374151;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .timer ul {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        
+        .timer li {
+            color: white;
+            width: 5rem;
+            height: 5rem;
+            line-height: 5rem;
+            border-radius: 12px;
+            font-size: 2rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+        
+        .timer li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 2s infinite;
+        }
+        
+        @keyframes shine {
+            100% {
+                left: 100%;
+            }
+        }
+        
+        .timer span {
+            display: inline-block;
+            width: 1.5rem;
+            line-height: 5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .ddl {
+            font-size: 1.2rem;
+            color: #6b7280;
+            margin-top: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="countdown">
+        <div class="today">现在是2025年5月17号08:30</div>
+        <div class="timer">
+            <h1>距离休息还有</h1>
+            <ul>
+                <li class="d">00</li>
+                <span>天</span>
+                <li class="h">03</li>
+                <span>时</span>
+                <li class="m">00</li>
+                <span>分</span>
+                <li class="s">00</li>
+                <span>秒</span>
+            </ul>
+        </div>
+        <div class="ddl">2025年5月27号11:30休息</div>
+    </div>
+
+    <script>
+        // 随机颜色主题
+        const colorThemes = [
+            {
+                primary: '#4a6fa5',
+                secondary: '#3d5c88',
+                background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+                text: '#4a6fa5'
+            },
+            {
+                primary: '#e63946',
+                secondary: '#d62828',
+                background: 'linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)',
+                text: '#e63946'
+            },
+            {
+                primary: '#48cae4',
+                secondary: '#00b4d8',
+                background: 'linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%)',
+                text: '#0096c7'
+            },
+            {
+                primary: '#70e000',
+                secondary: '#52b788',
+                background: 'linear-gradient(135deg, #f1faee 0%, #d8f3dc 100%)',
+                text: '#40916c'
+            },
+            {
+                primary: '#ff9f1c',
+                secondary: '#e76f51',
+                background: 'linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%)',
+                text: '#e85d04'
+            }
+        ];
+
+        // 随机选择一个主题
+        const randomTheme = colorThemes[Math.floor(Math.random() * colorThemes.length)];
+
+        // 应用主题颜色
+        document.body.style.background = randomTheme.background;
+        
+        const timeElements = document.querySelectorAll('.timer li');
+        timeElements.forEach(el => {
+            el.style.background = `linear-gradient(145deg, ${randomTheme.primary}, ${randomTheme.secondary})`;
+        });
+        
+        const separatorElements = document.querySelectorAll('.timer span');
+        separatorElements.forEach(el => {
+            el.style.color = randomTheme.text;
+        });
+
+        // 倒计时
+        function countdown() {
+            const day = document.querySelector('.timer .d');
+            const hour = document.querySelector('.timer .h');
+            const minutes = document.querySelector('.timer .m');
+            const second = document.querySelector('.timer .s');
+            const now = +new Date();
+            const future = +new Date('2025-5-27 11:30:00');
+            const count = (future - now) / 1000;
+            
+            let d = parseInt(count / 60 / 60 / 24);
+            d = d < 10 ? '0' + d : d;
+            let h = parseInt(count / 60 / 60 % 24);
+            h = h < 10 ? '0' + h : h;
+            let m = parseInt(count / 60 % 60);
+            m = m < 10 ? '0' + m : m;
+            let s = parseInt(count % 60);
+            s = s < 10 ? '0' + s : s;
+            
+            day.innerHTML = d;
+            hour.innerHTML = h;
+            minutes.innerHTML = m;
+            second.innerHTML = s;
+        }
+
+        countdown();
+        setInterval(countdown, 1000);
+    </script>
+</body>
+</html>    
