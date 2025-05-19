@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    form {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: inline-block;
+      width: 100px;
+      margin-bottom: 10px;
+    }
+
+    input,
+    select {
+      margin-bottom: 15px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    input[type="submit"] {
+      background-color: #3f51b5;
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #303f9f;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #e3f2fd;
+    }
+  </style>
+</head>
+<body>
+  <h2>新增学员</h2>
+  <form id="addStudentForm" autocomplete="off">
+    <label for="name">姓名:</label>
+    <input type="text" id="name" name="name" required>
+    <label for="age">年龄:</label>
+    <input type="number" id="age" name="age" required>
+    <label for="gender">性别:</label>
+    <select id="gender" name="gender">
+      <option value="男">男</option>
+      <option value="女">女</option>
+    </select>
+    <label for="salary">薪资:</label>
+    <input type="number" id="salary" name="salary" required>
+    <label for="city">就业城市:</label>
+    <select id="city" name="city">
+      <option value="北京">北京</option>
+      <option value="上海">上海</option>
+      <option value="广州">广州</option>
+    </select>
+    <input type="submit" value="录入">
+  </form>
+
+  <h2>就业榜</h2>
+  <table id="employmentTable">
+    <thead>
+      <tr>
+        <th>学号</th>
+        <th>姓名</th>
+        <th>年龄</th>
+        <th>性别</th>
+        <th>薪资</th>
+        <th>就业城市</th>
+        <th>录入时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+
+  <script>
+    //空数组
+    const arr = JSON.parse(localStorage.getItem('data'))||[]
+    const name = document.querySelector('#name')
+    const age = document.querySelector('#age')
+    const gender = document.querySelector('#gender')
+    const salary = document.querySelector('#salary')
+    const city = document.querySelector('#city')
+    const addStudentForm = document.querySelector('#addStudentForm')
+    const tbody = document.querySelector('tbody')
+
+    render()
+
+    addStudentForm.addEventListener('submit',function (e) {
+      e.preventDefault()
+      arr.push({
+        stuId: generateUniqueId(),
+        name:name.value,
+        age:age.value,
+        gender:gender.value,
+        salary:salary.value,
+        city:city.value,
+        time:new Date().toLocaleString()
+      })
+
+      render()
+      this.reset()
+      localStorage.setItem('data',JSON.stringify(arr))
+    })
+
+    function generateUniqueId() {
+      const timestamp = Date.now();
+      const random = Math.floor(Math.random() * 1000);
+      return timestamp + random;
+}
+
+
+    function render() {
+      const trArr = arr.map(function(ele,index) {
+        return`
+      <tr>
+        <td>${ele.stuId}</td>
+        <td>${ele.name}</td>
+        <td>${ele.age}</td>
+        <td>${ele.gender}</td>
+        <td>${ele.salary}</td>
+        <td>${ele.city}</td>
+        <td>${ele.time}</td>
+        <td>
+          <a href="javascript:">
+            <i class="iconfont icon-shanchu" data-id="${index}"></i>
+            删除
+          </a>
+        </td>
+      </tr>
+      `
+      })
+      tbody.innerHTML = trArr.join('')
+    }
+
+    tbody.addEventListener('click',function(e) {
+      if( e.target.tagName === 'A') {
+        if(confirm('您确定要删除这条数据吗?')){
+        arr.splice(e.target.dataset.id,1)
+        render()
+        localStorage.setItem('data',JSON.stringify(arr))
+        }
+      }
+    })
+  </script>
+</body>
+</html>
