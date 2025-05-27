@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新用户注册</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+        }
+
+        .register-container {
+            width: 400px;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h2 {
+            text-align: left;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+
+        form input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+
+        .code-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .code-container input {
+            flex: 2; /* 输入框占据2/3宽度 */
+            height: 44px;
+            border-radius: 4px;
+        }
+
+        .code-container button {
+            flex: 1; /* 按钮占据1/3宽度 */
+            height: 44px;
+            padding: 0 15px;
+            border: none;
+            background-color: #f4f4f4;
+            color: #333;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .code-container button:hover {
+            background-color: #eaeaea;
+        }
+
+        .code-container button:active {
+            background-color: #ddd;
+        }
+
+        form input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        form button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+        }
+
+        form button:active {
+            background-color: #3d8b40;
+        }
+
+        .msg {
+            display: block;
+            margin-bottom: 15px;
+            min-height: 20px;
+            font-size: 12px;
+            color: #ff4d4f;
+            transition: opacity 0.3s, transform 0.3s;
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+
+        .msg.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="register-container">
+    <h2>新用户注册</h2>
+    <form>
+      <div>
+        <input type="text" placeholder="用户名" id="username">
+        <span class="msg"></span>
+      </div>
+      <div>
+        <input type="text" placeholder="输入手机号码" id="phone">
+        <span class="msg"></span>
+      </div>
+      <div class="code-container">
+        <input type="text" placeholder="短信验证码" id="code">
+        <button type="button" id="getCode" class="send">发送验证码</button>
+      </div>
+      <span class="msg" id="codeMsg"></span> <!-- 验证码提示移到这里 -->
+      <div>
+        <input type="password" placeholder="设置6至20位字母、数字和符号组合" id="password">
+        <span class="msg"></span>
+      </div>
+      <div>
+        <input type="password" placeholder="请再次输入上面密码" id="confirmPassword">
+        <span class="msg"></span>
+      </div>
+      <div class="form-group">
+        <input type="checkbox" id="agreement" required>
+        <label for="agreement">已阅读并同意《用户服务协议》</label>
+      </div>
+      <span class="msg" id="agreementMsg"></span> <!-- 勾选提示移到这里 -->
+      <button type="submit" id="nextStep">下一步</button>
+    </form>
+</div>
+
+<script>
+    //短信验证码
+    const send = document.querySelector('.send')
+    let flag = true
+    send.addEventListener('click',function() {
+        if(flag) {
+            flag = false
+            let n = 5
+            send.innerHTML = `${n}秒后重新获取`
+            let timerId = setInterval(function() {
+                n--
+                send.innerHTML = `${n}秒后重新获取`
+                if(n === 0 ) {
+                    clearInterval(timerId)
+                    send.innerHTML = '发送验证码'
+                    flag = true
+                }
+            },1000)
+        }
+    })
+
+    // 显示错误信息的辅助函数
+    function showError(element, message) {
+        const msgElement = element.nextElementSibling
+        if (msgElement.classList.contains('send')) {
+            // 针对验证码输入框的特殊处理
+            document.getElementById('codeMsg').textContent = message
+            document.getElementById('codeMsg').classList.add('active')
+        } else if (element.id === 'agreement') {
+            // 针对勾选框的特殊处理
+            document.getElementById('agreementMsg').textContent = message
+            document.getElementById('agreementMsg').classList.add('active')
+        } else {
+            msgElement.textContent = message
+            msgElement.classList.add('active')
+        }
+    }
+
+    // 清除错误信息的辅助函数
+    function clearError(element) {
+        const msgElement = element.nextElementSibling
+        if (msgElement.classList.contains('send')) {
+            // 针对验证码输入框的特殊处理
+            document.getElementById('codeMsg').textContent = ''
+            document.getElementById('codeMsg').classList.remove('active')
+        } else if (element.id === 'agreement') {
+            // 针对勾选框的特殊处理
+            document.getElementById('agreementMsg').textContent = ''
+            document.getElementById('agreementMsg').classList.remove('active')
+        } else {
+            msgElement.textContent = ''
+            msgElement.classList.remove('active')
+        }
+    }
+
+    //用户名验证
+    const uname = document.querySelector('#username')
+    uname.addEventListener('change',verifyName)
+
+    function verifyName() {
+        const reg = /^[a-zA-Z0-9-_]{6,10}$/
+        if(!reg.test(uname.value)) {
+            showError(uname, '输入不合法,请输入6~10位字母、数字、下划线或连字符')
+            return false
+        }
+        clearError(uname)
+        return true
+    }
+
+    //手机号验证
+    const phone = document.querySelector('#phone')
+    phone.addEventListener('change',verifyPhone)
+
+    function verifyPhone() {
+        const reg = /^1(3\d|4[5-9]|5[0-35-9]|6[567][0-8]|8\d|9[0-35-9])\d{8}$/
+        if(!reg.test(phone.value)) {
+            showError(phone, '输入不合法,请输入正确的11位手机号')
+            return false
+        }
+        clearError(phone)
+        return true
+    }
+
+    //验证码验证
+    const code = document.querySelector('#code')
+    code.addEventListener('change',verifyCode)
+
+    function verifyCode() {
+        const reg = /^\d{6}$/
+        if(!reg.test(code.value)) {
+            showError(code, '输入不合法,请输入正确6位数字')
+            return false
+        }
+        clearError(code)
+        return true
+    }
+
+    //密码验证
+    const password = document.querySelector('#password')
+    password.addEventListener('change',verifyPassword)
+
+    function verifyPassword() {
+        const reg = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,20}$/
+        if(!reg.test(password.value)) {
+            showError(password, '输入不合法,请输入6~20位字母和数字的组合')
+            return false
+        }
+        clearError(password)
+        return true
+    }
+
+    //密码确认
+    const confirmPassword = document.querySelector('#confirmPassword')
+    confirmPassword.addEventListener('change',verifyConfirmPassword)
+
+    function verifyConfirmPassword() {
+        if(confirmPassword.value !== password.value) {
+            showError(confirmPassword, '两次输入密码不一致')
+            return false
+        }
+        clearError(confirmPassword)
+        return true
+    }
+
+    //勾选确认
+    const agreement = document.querySelector('#agreement')
+    agreement.addEventListener('change',verifyAgreement)
+
+    function verifyAgreement() {
+        if(!agreement.checked) {
+            showError(agreement, '需要同意用户协议')
+            return false
+        }
+        clearError(agreement)
+        return true
+    }
+    
+    //提交确认
+    const form = document.querySelector('form')
+    form.addEventListener('submit',function(e) {
+        let isValid = true
+        
+        if(!verifyName()) isValid = false
+        if(!verifyPhone()) isValid = false
+        if(!verifyCode()) isValid = false
+        if(!verifyPassword()) isValid = false
+        if(!verifyConfirmPassword()) isValid = false
+        if(!verifyAgreement()) isValid = false
+        
+        if(!isValid) e.preventDefault()
+    })
+</script>
+</body>
+</html>
+    
